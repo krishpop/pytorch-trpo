@@ -1,4 +1,5 @@
 import argparse
+import os
 from itertools import count
 
 import gym
@@ -11,6 +12,10 @@ from running_state import ZFilter
 from torch.autograd import Variable
 from trpo import trpo_step
 from utils import *
+
+from gym_sai2.envs import Peg1Env
+
+import tensorboardX
 
 torch.utils.backcompat.broadcast_warning.enabled = True
 torch.utils.backcompat.keepdim_warning.enabled = True
@@ -38,6 +43,8 @@ parser.add_argument('--render', action='store_true',
                     help='render the environment')
 parser.add_argument('--log-interval', type=int, default=1, metavar='N',
                     help='interval between training status logs (default: 10)')
+parser.add_argument('--log-dir', type=str, default='/scr1/Developer/Projects/pytorch-trpo/log',
+                    help='where to save tensorboard data')
 args = parser.parse_args()
 
 env = gym.make(args.env_name)
@@ -170,3 +177,4 @@ for i_episode in count(1):
     if i_episode % args.log_interval == 0:
         print('Episode {}\tLast reward: {}\tAverage reward {:.2f}'.format(
             i_episode, reward_sum, reward_batch))
+
